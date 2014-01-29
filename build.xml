@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<project name="bootesServer" default="package" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+	<property name="conf.dir" value="src/main/resources"/>
+	<property name="confmode.dir" value="confmode"/>
+	
+	<target name="conf">
+        <fail unless="mode" message="specify -Dmode=[dev,real]"/>
+        <copy file="${confmode.dir}/hibernate.cfg.${mode}.xml" tofile="${conf.dir}/hibernate.cfg.xml" overwrite="true"/>
+        <copy file="${confmode.dir}/log4j.${mode}.properties" tofile="${conf.dir}/log4j.properties" overwrite="true"/>
+    </target>
+    
+	
+</project>
+
