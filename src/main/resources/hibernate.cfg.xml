@@ -41,7 +41,7 @@
         <property name="hibernate.c3p0.min_size">1</property>
         <property name="hibernate.c3p0.max_size">2</property>
         <property name="hibernate.c3p0.idle_test_period">100</property>
-        <property name="hibernate.c3p0.preferredTestQuery">select 1 from tb_test</property>
+        <property name="hibernate.c3p0.preferredTestQuery">select 1 from tb_user</property>
         
         <!-- JDBC connection pool (use the built-in) -->
         <!-- 
@@ -63,16 +63,8 @@
         <property name="hbm2ddl.auto">update</property>
         -->
         <mapping class="com.llys.bootes.model.Test"/>
+        <mapping class="com.llys.bootes.model.User"/>
         
-     <!--    
-        
-        <mapping class="com.skplanet.rakeflurry.db.AppMetricsDao"/>
-        <mapping class="com.skplanet.rakeflurry.dashboard.DashBoard"/>
-        <mapping class="com.skplanet.rakeflurry.dashboard.AccessCodeSummary"/>
-        <mapping class="com.skplanet.rakeflurry.dashboard.ApiKeySummary"/>
-        <mapping class="com.skplanet.rakeflurry.dashboard.ApiSummary"/>
-        <mapping class="com.skplanet.rakeflurry.db.WorkerDao"/>
- -->
     </session-factory>
 
 </hibernate-configuration>

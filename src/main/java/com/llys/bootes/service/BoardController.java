@@ -19,8 +19,7 @@ import com.llys.bootes.util.GenericDao;
 @Controller
 public class BoardController {
 
-private Logger logger = LoggerFactory.getLogger(BoardController.class);
-    
+    private Logger logger = LoggerFactory.getLogger(getClass());
     @RequestMapping(value = "/board/list", method = RequestMethod.GET)
     public @ResponseBody String listBoard() throws Exception {
         

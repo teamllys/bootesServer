@@ -21,21 +21,6 @@ import com.llys.bootes.util.GenericDao;
 public class CoffretController {
     private Logger logger = LoggerFactory.getLogger(CoffretController.class);
     
-//    @RequestMapping(value = "/coffret/list", method = RequestMethod.GET)
-//    public @ResponseBody String list() throws Exception {
-//        
-//        Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
-//        ObjectMapper mapper = new ObjectMapper();
-//        
-//        try {
-//            
-//            resultMap.put("data", 1);
-//        } catch(Exception e) {
-//            resultMap.put("error", 1);
-//            resultMap.put("message", 1);
-//        }
-//        return mapper.writeValueAsString(resultMap); 
-//    }
 
     /**
      * 
@@ -45,7 +30,7 @@ public class CoffretController {
      * @throws Exception
      */
     @RequestMapping(value = "/coffret/list", method = RequestMethod.GET)
-    public @ResponseBody String listCoffret() throws Exception {
+    public @ResponseBody String list() throws Exception {
         
         Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
         ObjectMapper mapper = new ObjectMapper();
@@ -59,6 +44,14 @@ public class CoffretController {
         }
         return mapper.writeValueAsString(resultMap); 
     }
+    /**
+     * 
+     * coffret 하나의 자세한 정보를 리턴
+     * 
+     * @param id
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/coffret", method = RequestMethod.GET)
     public @ResponseBody String show(@RequestParam String id) throws Exception {
         

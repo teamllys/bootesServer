@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class Reply {
+public class ReplyController {
 
-    @RequestMapping(value = "/reply", method = RequestMethod.GET)
-    public @ResponseBody String show(@RequestParam String id) throws Exception {
+    @RequestMapping(value = "/reply/list", method = RequestMethod.GET)
+    public @ResponseBody String list(@RequestParam String id) throws Exception {
           
           Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
           ObjectMapper mapper = new ObjectMapper();
