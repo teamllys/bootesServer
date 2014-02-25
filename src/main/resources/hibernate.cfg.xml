@@ -64,6 +64,8 @@
         -->
         <mapping class="com.llys.bootes.model.Test"/>
         <mapping class="com.llys.bootes.model.User"/>
+        <mapping class="com.llys.bootes.model.Coffret"/>
+        <mapping class="com.llys.bootes.model.Item"/>
         
     </session-factory>
 

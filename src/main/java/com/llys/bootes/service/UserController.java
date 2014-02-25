@@ -1,5 +1,6 @@
 package com.llys.bootes.service;
 
+import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class UserController {
     
     /**
      * 
-     * @param params : User class의 속성들이 json으로 표시
+     * @param params : {@link com.llys.bootes.model.User} class의 속성들이 json으로 표시
      * @param req
      * @return
      * @throws Exception
@@ -45,7 +46,7 @@ public class UserController {
           
           Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
           ObjectMapper mapper = new ObjectMapper();
-          
+          mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
           try {
               UserAgent uc = new UserAgent();
               
@@ -57,6 +58,7 @@ public class UserController {
               resultMap.put("error", 1);
               resultMap.put("message", e.getMessage());
               resultMap.put("details", StringUtil.exception2Str(e));
+              logger.error(StringUtil.exception2Str(e));
           }
           return mapper.writeValueAsString(resultMap); 
     }
@@ -64,34 +66,47 @@ public class UserController {
      * 
      * userId와 password가 맞으면 해당 user의 정보를 리턴
      * 
-     * @param userId
+     * @param emailId 
      * @param password
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public @ResponseBody String show(
-            @RequestParam String userId,
-            @RequestParam String password) throws Exception {
+    public @ResponseBody String list(
+            @RequestParam String emailId,
+            @RequestParam String password,
+            HttpServletRequest req) throws Exception {
           
+        
+        logger.info("{} sender : {}, " +
+                    "emailId : {}, password : {}", 
+                    new Object[]{
+                        req.getRequestURI(),
+                        req.getRemoteAddr(), 
+                        emailId, password});
+        
           Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
           ObjectMapper mapper = new ObjectMapper();
-          
-          
+          mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
           try {
               UserAgent uc = new UserAgent();
               User user = new User();
-              user.setUserId(userId);
+              user.setEmailId(emailId);
               user.setPassword(password);
               User returnUser = uc.find(user);
               
               resultMap.put("results", returnUser);
+              logger.info("{} : {}", req.getRequestURI(), returnUser);
+              
           } catch(Exception e) {
               resultMap.put("error", 1);
               resultMap.put("message", e.getMessage());
               resultMap.put("details", StringUtil.exception2Str(e));
+              logger.error(StringUtil.exception2Str(e));
           }
-          return mapper.writeValueAsString(resultMap); 
+          
+          return mapper.writeValueAsString(resultMap);
+          
     }
 
 }
