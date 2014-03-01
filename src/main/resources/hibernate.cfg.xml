@@ -66,6 +66,8 @@
         <mapping class="com.llys.bootes.model.User"/>
         <mapping class="com.llys.bootes.model.Coffret"/>
         <mapping class="com.llys.bootes.model.Item"/>
+        <mapping class="com.llys.bootes.model.ReplyBoard"/>
+        <mapping class="com.llys.bootes.model.ReplyMessage"/>
         
     </session-factory>
 
