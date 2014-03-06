@@ -16,6 +16,7 @@ public class ReplyMessage {
     private Long replyBoardId;
     private String subject;
     private String content;
+    private Long parentMessageId;
     private Long userId;
     private Date createTime;
     
@@ -62,4 +63,12 @@ public class ReplyMessage {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+    @Column(name = "parent_message_id")
+	public Long getParentMessageId() {
+		return parentMessageId;
+	}
+	public void setParentMessageId(Long parentMessageId) {
+		this.parentMessageId = parentMessageId;
+	}
+    
 }
