@@ -27,6 +27,7 @@ public class Coffret {
     private Long userId;
     private Date createTime;
     private Date updateTime;
+    private Long replyBoardId;
     @JsonManagedReference
     private List<Item> items;
     
@@ -82,4 +83,11 @@ public class Coffret {
     public void setItems(List<Item> items) {
         this.items = items;
     }
+    @Column(name = "reply_board_id")
+	public Long getReplyBoardId() {
+		return replyBoardId;
+	}
+	public void setReplyBoardId(Long replyBoardId) {
+		this.replyBoardId = replyBoardId;
+	}
 }

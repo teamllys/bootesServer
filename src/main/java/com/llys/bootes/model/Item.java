@@ -28,6 +28,7 @@ public class Item {
     private String userId;
     private Date createTime;
     private Date updateTime;
+    private Long replyBoardId;
     @JsonBackReference
     private Coffret coffret;
     
@@ -84,5 +85,12 @@ public class Item {
     }
     public void setCoffret(Coffret coffret) {
         this.coffret = coffret;
-    }    
+    }
+    @Column(name = "reply_board_id")
+	public Long getReplyBoardId() {
+		return replyBoardId;
+	}
+	public void setReplyBoardId(Long replyBoardId) {
+		this.replyBoardId = replyBoardId;
+	}
 }

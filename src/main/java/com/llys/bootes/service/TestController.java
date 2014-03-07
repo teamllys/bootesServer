@@ -23,6 +23,8 @@ import com.llys.bootes.agent.ItemAgent;
 import com.llys.bootes.model.Coffret;
 import com.llys.bootes.model.Item;
 import com.llys.bootes.model.ItemCond;
+import com.llys.bootes.model.ReplyBoard;
+import com.llys.bootes.model.ReplyMessage;
 import com.llys.bootes.model.User;
 import com.llys.bootes.util.HttpUtil;
 import com.llys.bootes.util.StringUtil;
@@ -48,15 +50,15 @@ public class TestController {
         try {
             
         	User user = initUser();
-        	initReplyBoard();
-        	initReplyMessage();
-        	initCoffret(user);
+        	ReplyBoard rb = initReplyBoard();
+	        makeReplyMessages(user, rb);
+	        makeCoffrets(user, rb);
             
-        	logger.info("{} : {}", req.getRequestURI(), itemList);
+        	logger.info("{}", req.getRequestURI());
         	resultMap.put("message", "success");
         } catch(Exception e) {
             resultMap.put("error", 1);
-            resultMap.put("message", 1);
+            resultMap.put("message", e.getMessage());
             resultMap.put("details", StringUtil.exception2Str(e));
             logger.error("error : {}", StringUtil.exception2Str(e));
         }
@@ -67,36 +69,88 @@ public class TestController {
     	data.put("emailId", "lons@teramail.com");
     	data.put("password", "1234");
     	ObjectMapper mapper = new ObjectMapper();
+    	mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        
     	String json = mapper.writeValueAsString(data);
     	String result = HttpUtil.sendHttpPut("http://localhost:8080/bootes/user/create", json, 5000,5000);
-    	User user = mapper.readValue(result,  User.class);
-    	logger.info("init User : {}", result);
+    	Map tempMap = mapper.readValue(result, Map.class);
+    	Object error = tempMap.get("error");
+    	if(error != null && (Integer)error == 1) {
+    		throw new Exception((String)tempMap.get("message"));
+    	}
+    	User user = mapper.convertValue((Map)tempMap.get("results"),  User.class);
+    	logger.info("init User : {}", user);
     	return user;
     }
-    private void initReplyBoard() throws Exception {
-    	Map<String, Object> data = new LinkedHashMap<String, Object>();
-        private Long replyBoardId;
-        private String name;
-        private Integer valid;
-        private String boardType;
-        private Date createTime;
+    private ReplyBoard initReplyBoard() throws Exception {
     	
+        Map<String, Object> data = new LinkedHashMap<String, Object>();
+    	data.put("name", "coffret board");
+    	data.put("valid", 1);
+    	data.put("boardType", "normal");
+    	
+    	ObjectMapper mapper = new ObjectMapper();
+    	mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        
+    	String json = mapper.writeValueAsString(data);
+    	String result = HttpUtil.sendHttpPut("http://localhost:8080/bootes/replyboard/create", json, 5000,5000);
+    	
+    	Map tempMap = mapper.readValue(result, Map.class);
+    	Object error = tempMap.get("error");
+    	if(error != null && (Integer)error == 1) {
+    		throw new Exception((String)tempMap.get("message"));
+    	}
+    	
+    	ReplyBoard rb = mapper.convertValue((Map)tempMap.get("results"),  ReplyBoard.class);
+    	logger.info("init ReplyBoard : {}", rb);
+    	return rb;
     }
-    private void initCoffret(User user) throws Exception {
+    private void makeReplyMessages(User user, ReplyBoard rb) throws Exception {
+    	
+    	initReplyMessage(user, rb, "My reply subject", "My reply content");
+    	initReplyMessage(user, rb, "My reply subject 2 ", "My reply content 2");
+    }
+    private void initReplyMessage(User user, ReplyBoard rb, String subject, String content) throws Exception {
+        Map<String, Object> data = new LinkedHashMap<String, Object>();
+    	data.put("reply_board_id", rb.getReplyBoardId());
+    	data.put("subject", subject);
+    	data.put("content", content);
+    	data.put("userId", user.getUserId());
+    	
+    	ObjectMapper mapper = new ObjectMapper();
+    	mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        
+    	String json = mapper.writeValueAsString(data);
+    	String result = HttpUtil.sendHttpPut("http://localhost:8080/bootes/replymessage/create", json, 5000,5000);
+    	
+    	Map tempMap = mapper.readValue(result, Map.class);
+    	Object error = tempMap.get("error");
+    	if(error != null && (Integer)error == 1) {
+    		throw new Exception((String)tempMap.get("message"));
+    	}
+    	
+    	ReplyMessage rm = mapper.convertValue((Map)tempMap.get("results"),  ReplyMessage.class);
+    	logger.info("init ReplyMessage : {}", rm);    	
+    }
+    private void makeCoffrets(User user, ReplyBoard rb) throws Exception {
+    	initCoffret(user, rb, "message 1", "message content 1");
+    	initCoffret(user, rb, "message 2", "message content 2");
+    }
+    private void initCoffret(User user, ReplyBoard rb, String subject, String content) throws Exception {
     	Map<String, Object> data = new LinkedHashMap<String, Object>();
-    	data.put("subject", "my coffret");
-    	data.put("content", "my coffret first");
+    	data.put("subject", subject);
+    	data.put("content", content);
     	data.put("userId", user.getUserId());
     
     	List<Map<String, Object>> itemList = new LinkedList<Map<String, Object>>();
     	Map<String, Object> item = new LinkedHashMap<String, Object>();
-    	item.put("subject", "myItem");
-    	item.put("content", "myItem content");
+    	item.put("subject", subject + " myItem");
+    	item.put("content", content + " myItem content");
     	item.put("userId", user.getUserId());
     	
     	Map<String, Object> item2 = new LinkedHashMap<String, Object>();
-    	item2.put("subject", "myItem");
-    	item2.put("content", "myItem content");
+    	item2.put("subject", subject + " myItem");
+    	item2.put("content", content + " myItem content");
     	item2.put("userId", user.getUserId());
     	
     	itemList.add(item);
@@ -105,11 +159,18 @@ public class TestController {
     	data.put("item", itemList);
     	
     	ObjectMapper mapper = new ObjectMapper();
+    	mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        
     	String json = mapper.writeValueAsString(data);
     	String result = HttpUtil.sendHttpPut("http://localhost:8080/bootes/coffret/create", json, 5000,5000);
+    	
+    	
+    	Map tempMap = mapper.readValue(result, Map.class);
+    	Object error = tempMap.get("error");
+    	if(error != null && (Integer)error == 1) {
+    		throw new Exception((String)tempMap.get("message"));
+    	}
+    	
     	logger.info("init coffret : {}", result);
-    	        
-        
     }
-
 }
