@@ -41,7 +41,9 @@ public class ReplyMessageAgent {
             tx = session.beginTransaction();
             
             Criteria cr = session.createCriteria(ReplyMessage.class);
-            
+            cr.createAlias("ReplyMessage", "P");
+
+            cr.add(Restrictions.eq("P.replyMessageId", "parentMessageId"));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             if(cond.getCreateTimeBegin() != null) {
                 cr.add(Restrictions.ge("createTime", sdf.parse(cond.getCreateTimeBegin())));

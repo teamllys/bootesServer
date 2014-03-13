@@ -107,15 +107,18 @@ public class TestController {
     }
     private void makeReplyMessages(User user, ReplyBoard rb) throws Exception {
     	
-    	initReplyMessage(user, rb, "My reply subject", "My reply content");
-    	initReplyMessage(user, rb, "My reply subject 2 ", "My reply content 2");
+    	ReplyMessage rm1 = initReplyMessage(user, rb, "My reply subject", "My reply content", null);
+    	ReplyMessage rm2 = initReplyMessage(user, rb, "My reply subject 2 ", "My reply content 2", null);
+    	ReplyMessage rm3 = initReplyMessage(user, rb, "My reply subject 3 ", "My reply content 3", rm1.getReplyBoardId());
+    	ReplyMessage rm4 = initReplyMessage(user, rb, "My reply subject 4 ", "My reply content 4", rm1.getReplyBoardId());
     }
-    private void initReplyMessage(User user, ReplyBoard rb, String subject, String content) throws Exception {
+    private ReplyMessage initReplyMessage(User user, ReplyBoard rb, String subject, String content, Long parentId) throws Exception {
         Map<String, Object> data = new LinkedHashMap<String, Object>();
-    	data.put("reply_board_id", rb.getReplyBoardId());
+    	data.put("replyBoardId", rb.getReplyBoardId());
     	data.put("subject", subject);
     	data.put("content", content);
     	data.put("userId", user.getUserId());
+    	data.put("parentMessageId", parentId);
     	
     	ObjectMapper mapper = new ObjectMapper();
     	mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
@@ -131,6 +134,7 @@ public class TestController {
     	
     	ReplyMessage rm = mapper.convertValue((Map)tempMap.get("results"),  ReplyMessage.class);
     	logger.info("init ReplyMessage : {}", rm);    	
+    	return rm;
     }
     private void makeCoffrets(User user, ReplyBoard rb) throws Exception {
     	initCoffret(user, rb, "message 1", "message content 1");
@@ -156,7 +160,7 @@ public class TestController {
     	itemList.add(item);
     	itemList.add(item2);
     	
-    	data.put("item", itemList);
+    	data.put("items", itemList);
     	
     	ObjectMapper mapper = new ObjectMapper();
     	mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
